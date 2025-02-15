@@ -8,7 +8,7 @@ import json
 
 from bot_state import BotState
 from file_watcher import FileWatcher
-from openai_integration import send_request, generate_test_cases
+from openai_integration import send_request, generate_test_cases, get_sample_snippet
 from logger import setup_logging
 
 # Setup logging to a file named 'bot.log'
@@ -32,7 +32,6 @@ def check_step_completion(step):
     if not token:
         return False
     for root, dirs, files in os.walk('.'):
-        # Skip directories that are not relevant (e.g., .git, Bot folder)
         if '.git' in dirs:
             dirs.remove('.git')
         if 'Bot' in dirs:
@@ -72,9 +71,7 @@ def initialize_steps(bot_state):
         if not isinstance(steps, list):
             raise ValueError("Generated steps is not a list.")
         bot_state.steps = steps
-        print("Project steps generated successfully:")
-        for idx, step in enumerate(bot_state.steps, 1):
-            print(f"Step {idx}: {step.get('description')}")
+        print("Project steps generated successfully. Starting with the first step.\n")
     except Exception as e:
         logging.error(f"Error parsing steps from OpenAI: {e}")
         print("Error generating steps. Please ensure OpenAI returned a valid JSON array.")
@@ -99,21 +96,28 @@ async def main_loop():
             print("All steps complete!")
             break
 
+        # Display the current step's description.
+        print(f"\nCurrent Step: {current_step['description']}\n")
+
         # If no suggestion has been given for the current step, send the prompt to OpenAI.
         if not bot_state.current_suggestion:
-            prompt = current_step["description"]
-            logging.info(f"Sending step prompt to OpenAI: {prompt}")
-            suggestion = send_request(prompt)
+            logging.info(f"Sending step prompt to OpenAI: {current_step['description']}")
+            suggestion = send_request(current_step["description"])
             bot_state.current_suggestion = suggestion
             logging.info(f"Received suggestion: {suggestion}")
-            # Display the suggestion (simulating the text cloud on the bot image).
-            print(f"\nBot Suggestion for current step:\n{suggestion}\n")
+            print(f"Bot Suggestion for current step:\n{suggestion}\n")
+            
+            # Ask if the user wants to see a sample snippet.
+            print("Would you like to see a sample code snippet for this step? (y/n)")
+            sample_input = input("> ")
+            if sample_input.lower() in ['y', 'yes']:
+                sample_snippet = get_sample_snippet(current_step["description"])
+                print("\nSample Code Snippet:\n" + sample_snippet + "\n")
 
         # Wait for a file change event.
         await file_change_flag.wait()
         file_change_flag.clear()
-        # Small delay to allow file saving to finish.
-        await asyncio.sleep(2)
+        await asyncio.sleep(2)  # Allow file saving to finish.
 
         # Check if the current step is complete.
         if check_step_completion(current_step):
@@ -125,8 +129,7 @@ async def main_loop():
             if user_input.lower() in ['y', 'yes']:
                 logging.info("User requested test cases generation.")
                 test_cases = generate_test_cases(current_step["description"])
-                print("\nGenerated Test Cases:")
-                print(test_cases)
+                print("\nGenerated Test Cases:\n" + test_cases + "\n")
             # Mark the current step as complete.
             bot_state.complete_current_step()
             bot_state.current_suggestion = None

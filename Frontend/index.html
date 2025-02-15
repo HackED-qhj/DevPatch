@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>DevPatch</title>
+        <!-- CodeMirror - Dracula Theme -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css" /> 
+        <link rel="stylesheet" href="style.css" />
+    </head>
+
+    <body>
+        <!-- File Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <button id="closeSidebar" class="close-btn">&times;</button>
+            <h2>Upload Files</h2>
+            <p>
+                <br></br>
+                + Click here to upload files
+            </p>
+        </div>
+
+        <!-- Bot Sidebar -->
+        <div id="botsidebar" class="botsidebar">
+            <button id="closeBotSidebar" class="close-btn">&times;</button>
+            <h2>Bot Image</h2>
+            <p>
+                Placeholder
+            </p>
+        </div>
+
+        <!-- Header & Toggle -->
+        <div class="header">
+            <button id="toggleSidebar" class="menu-btn">&#9776;</button>
+            <h1>DevPatch</h1>
+            <button id="toggleBotSidebar" class="menu-btn">&#9776;</button>
+        </div>
+
+        <!-- Code Area -->
+        <div class="main">
+            <textarea id="editor">Write your code here...</textarea>
+        </div>
+
+        <!-- CodeMirror Script JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+        <!-- Our script -->
+        <script src="main.js"></script>
+    </body>
+</html>

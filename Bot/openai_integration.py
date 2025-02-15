@@ -29,3 +29,10 @@ def generate_test_cases(step_description):
         f"Step: {step_description}"
     )
     return send_request(test_prompt)
+
+def get_sample_snippet(step_description):
+    sample_prompt = (
+        f"Please provide a sample code snippet that roughly implements the following step: {step_description}. "
+        "Only provide code, no additional explanation."
+    )
+    return send_request(sample_prompt)
