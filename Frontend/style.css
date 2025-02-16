@@ -77,17 +77,17 @@ body {
 
 /* Content Area */
 .content-area {
-    margin-top: 60px; /* space for the fixed header */
+    margin-top: 40px; /* space for the fixed header */
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 60px);
+
 }
 
 
 /* Main area styling */
 .main {
-    flex:1;              /* takes up remaining vertical space */
-    padding: 20px;
+    flex: 0 0 auto;              /* takes up remaining vertical space */
+    padding: 0 20px 20px;
     background: #fff;
     overflow: auto;
 }
@@ -104,14 +104,13 @@ body {
 
 /* Bot Container */
 .bot-container {
-    flex: 0 0 auto;
     width: 100%;
-    background-color: #e0e0e0;  /* A simple gray background */
-    padding: 15px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 200px;
+  background-color: #e0e0e0;  /* Simple gray background */
+  padding: 15px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;  
 }
 
   /* Chat messages display area */
