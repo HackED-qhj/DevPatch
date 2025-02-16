@@ -16,21 +16,13 @@
         <div id="sidebar" class="sidebar">
             <button id="closeSidebar" class="close-btn">&times;</button>
             <h2>Upload Files</h2>
-            <p>
-                <br></br>
+            <p id="uploadPlaceholder">
+                <br>
                 + Click here to upload files
             </p>
+            <!-- List of Files -->
+             <ul id="fileList"></ul>
         </div>
-
-        <!-- Bot Sidebar 
-        <div id="botsidebar" class="botsidebar">
-            <button id="closeBotSidebar" class="close-btn">&times;</button>
-            <h2>Bot Image</h2>
-            <p>
-                Placeholder
-            </p>
-        </div>
-        -->
 
         <!-- Header & Toggle -->
         <div class="header">
@@ -43,6 +35,8 @@
 
             <!-- Code Area -->
             <div class="main">
+                <!-- Tabs container -->
+                 <div id="tabsContainer" class="tabs-container"></div>
                 <textarea id="editor">Write your code here...</textarea>
             </div>
 
