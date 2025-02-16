@@ -4,11 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeSidebar = document.getElementById('closeSidebar');
   const sidebar = document.getElementById('sidebar');
 
-  //Bot Sidebar Elements
-  const toggleBotSidebar = document.getElementById('toggleBotSidebar');
-  const closeBotSideabar = document.getElementById('closeBotSidebar');
-  const botSidebar = document.getElementById('botSidebar');
-
 
   //CodeMirror Editor Container Content
   const main = document.querySelector('.main');
@@ -31,16 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateMargins(){
     const leftOpen = sidebar.classList.contains('open');
-    const rightOpen = botsidebar.classList.contains('open');
 
-    main.classList.remove('sidebar-open', 'sidebar-open-bot', 'sidebar-open-both');
+    main.classList.remove('sidebar-open');
 
-    if (leftOpen && rightOpen) {
-        main.classList.add('sidebar-open-both');
-    } else if (leftOpen){
+    if (leftOpen) {
         main.classList.add('sidebar-open');
-    } else if (rightOpen){
-        main.classList.add('sidebar-open-bot');
     }
   }
 
@@ -58,18 +48,5 @@ document.addEventListener('DOMContentLoaded', function () {
     refreshEditor();
   });
 
-  //Open Bot Sidebar
-  toggleBotSidebar.addEventListener('click', function () {
-    botsidebar.classList.add('open');
-    updateMargins();
-    refreshEditor();
-  });
-
-  //Close Bot Sidebar
-  closeBotSidebar.addEventListener('click', function () {
-    botsidebar.classList.remove('open');
-    updateMargins();
-    refreshEditor();
-  });
 
 });
