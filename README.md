@@ -52,13 +52,13 @@ There are countless opportunities to scale DevPatch, and with enough time, this 
 # 💻 Getting Started
 
 **Clone the repository**
-'''bash
+
 git clone https://github.com/HackED-qhj/DevPatch.git
 cd DevPatch
-'''
+
 
 **Install dependencies**
-'''bash
+'''sh
 pip install -r requirements.txt
 '''
 
