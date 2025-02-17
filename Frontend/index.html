@@ -4,17 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DevPatch</title>
-  <!-- CodeMirror - Dracula Theme -->
+  
+  <!-- CodeMirror Core & Theme -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+  
+  <!-- Syntax Modes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/sql/sql.min.js"></script>
+  
+  <!-- Autocomplete -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/javascript-hint.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+  
   <!-- xterm.js CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
   <!-- Custom Styles -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-
+  
   <!-- Landing Page Popup -->
   <div id="landingPage" class="landing-page">
     <div class="landing-content">
@@ -24,78 +41,77 @@
       <button id="startProject">Start Project</button>
     </div>
   </div>
-
+  
   <!-- File Sidebar -->
   <div id="sidebar" class="sidebar">
     <button id="closeSidebar" class="close-btn">&times;</button>
     <h2>Files</h2>
     <div id="fileActions" class="dropdown file-actions">
-        <button class="dropbtn">
-            File Options
-        </button>
-        <div class="dropdown-content">
-            <button id="newFile">➕ New File</button>
-            <button id="renameFile">✏️ Rename File</button>
-            <button id="deleteFile">🗑️ Delete File</button>
-        </div>
+      <button class="dropbtn">File Options</button>
+      <div class="dropdown-content">
+        <button id="newFile"><i class="fas fa-file"></i> New File</button>
+        <button id="renameFile"><i class="fas fa-edit"></i> Rename File</button>
+        <button id="deleteFile"><i class="fas fa-trash"></i> Delete File</button>
+        <button id="uploadFile"><i class="fas fa-upload"></i> Upload File</button>
+      </div>
     </div>
-    
-      
-    <p id="uploadPlaceholder">+ Click here to upload files</p>
     <ul id="fileList"></ul>
   </div>
-
-  <!-- Header -->
+  
+  <!-- Header (Only contains Sidebar Toggle & Message Bar) -->
   <div class="header">
     <button id="toggleSidebar" class="menu-btn">&#9776;</button>
     <div id="messageBar" class="message-bar hidden"></div>
-    <div class="header-buttons">
-        <button id="runButton" class="header-btn">
-            <i class="fas fa-play"></i> Run
-        </button>
-        <button id="saveButton" class="header-btn">
-            <i class="fas fa-save"></i> Save
-        </button>
-    </div>
-    
   </div>
-
+  
   <!-- Content Area -->
   <div class="content-area">
-    <div class="main">
+    <!-- IDE Header: DevPatch title and Run/Save buttons -->
+    <div class="ide-header">
       <div class="ide-title">DevPatch</div>
-      <div id="tabsContainer" class="tabs-container"></div>
-      <textarea id="editor">Upload or Create a file to begin!</textarea>
+      <div class="editor-buttons">
+        <button id="runButton" class="editor-btn">
+          <i class="fas fa-play"></i> Run
+        </button>
+        <button id="saveButton" class="editor-btn">
+          <i class="fas fa-save"></i> Save
+        </button>
+      </div>
     </div>
-
+    
+    <div class="main">
+      <div id="tabsContainer" class="tabs-container"></div>
+      <!-- CodeMirror target textarea -->
+      <textarea id="editor">// Upload or Create a file to begin!</textarea>
+    </div>
+    
     <!-- Terminal -->
     <div id="terminalContainer" class="terminal-container">
-        <div id="terminalHeader" class="terminal-header">
-            <div class="terminal-title">
-                <i class="fas fa-terminal"></i> DevPatch Terminal
-            </div>
+      <div id="terminalHeader" class="terminal-header">
+        <div class="terminal-title">
+          <i class="fas fa-terminal"></i> DevPatch Terminal
         </div>
-        <div id="terminal"></div>
-        <div id="terminalResizeHandle" class="terminal-resize-handle">
-            <i class="fas fa-grip-lines"></i> <!-- Resize Handle Icon -->
-        </div>
+      </div>
+      <div id="terminal"></div>
+      <div id="terminalResizeHandle" class="terminal-resize-handle">
+        <i class="fas fa-grip-lines"></i>
+      </div>
     </div>
     
     <!-- Chat Bot -->
     <div class="bot-container">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="bot-actions">
-            <button id="hintButton" class="bot-button">Give me a hint</button>
-            <button id="exampleButton" class="bot-button">Give me an example</button>
-        </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="bot-actions">
+        <button id="hintButton" class="bot-button">Give me a hint</button>
+        <button id="exampleButton" class="bot-button">Give me an example</button>
+      </div>
     </div>
-    
-
+  </div>
+  
   <!-- Hidden File Input -->
   <input type="file" id="fileInput" multiple style="display: none;" />
-
+  
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
   <script src="main.js"></script>

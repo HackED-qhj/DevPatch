@@ -2,13 +2,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   // --- Message Bar Function ---
   function showMessage(type, message, duration = 3000) {
     const messageBar = document.getElementById("messageBar");
-    // Set the message and type
     messageBar.textContent = message;
     messageBar.className = `message-bar ${type}`;
-    // Show the message
     messageBar.style.opacity = "1";
     messageBar.classList.remove("hidden");
-    // Auto-hide after the duration
     if (duration > 0) {
       setTimeout(() => {
         messageBar.style.opacity = "0";
@@ -21,11 +18,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   // --- Inline Input for New/Rename File ---
   function showInlineInput(promptText, defaultValue, callback) {
-    // Remove existing input if any
     const existingInput = document.querySelector(".inline-input-container");
     if (existingInput) existingInput.remove();
 
-    // Create new input container
     const container = document.createElement("div");
     container.className = "inline-input-container";
 
@@ -43,35 +38,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     cancelButton.textContent = "Cancel";
     container.appendChild(cancelButton);
 
-    // Insert the container ABOVE the uploadPlaceholder
     const uploadPlaceholder = document.getElementById("uploadPlaceholder");
     uploadPlaceholder.parentNode.insertBefore(container, uploadPlaceholder);
 
-    // Focus input for user convenience
     input.focus();
-
-    // Ensure text scrolls when typing
-    input.addEventListener("input", function () {
-        input.scrollLeft = input.scrollWidth;
+    input.addEventListener("input", () => {
+      input.scrollLeft = input.scrollWidth;
     });
 
-    // OK button behavior
     okButton.addEventListener("click", () => {
-        if (input.value.trim() === "") {
-            showMessage("error", "File name cannot be empty.");
-            return;
-        }
-        callback(input.value);
-        container.remove();
+      if (input.value.trim() === "") {
+        showMessage("error", "File name cannot be empty.");
+        return;
+      }
+      callback(input.value);
+      container.remove();
     });
 
-    // Cancel button behavior
     cancelButton.addEventListener("click", () => {
-        container.remove();
+      container.remove();
     });
-}
+  }
 
-  
   // --- Sidebar and Header Elements ---
   const toggleSidebar = document.getElementById('toggleSidebar');
   const closeSidebar = document.getElementById('closeSidebar');
@@ -86,25 +74,61 @@ document.addEventListener('DOMContentLoaded', async function () {
   const deleteFileBtn = document.getElementById('deleteFile');
   const fileInput = document.getElementById('fileInput');
 
-  // --- Header Buttons ---
-  const runButton = document.getElementById('runButton');
-  const saveButton = document.getElementById('saveButton');
-
   // --- Editor and CodeMirror Instance ---
   const editorTextarea = document.getElementById('editor');
   const codeEditor = CodeMirror.fromTextArea(editorTextarea, {
-    mode: "javascript",
+    mode: "javascript", // Default; will update based on file extension
     theme: "dracula",
     lineNumbers: true,
     indentUnit: 2,
     tabSize: 2,
-    lineWrapping: true
+    lineWrapping: true,
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    extraKeys: { "Ctrl-Space": "autocomplete" }
   });
   const tabsContainer = document.getElementById('tabsContainer');
 
+  // --- Function to Detect and Set Syntax Mode ---
+  function updateEditorMode(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    let mode = "javascript"; // Default
+    if (ext === "html") mode = "htmlmixed";
+    else if (ext === "css") mode = "css";
+    else if (ext === "js") mode = "javascript";
+    else if (ext === "json") mode = { name: "javascript", json: true };
+    else if (ext === "py") mode = "python";
+    else if (ext === "java") mode = "text/x-java";
+    else if (ext === "c" || ext === "h") mode = "text/x-csrc";
+    else if (ext === "cpp" || ext === "hpp") mode = "text/x-c++src";
+    else if (ext === "sh") mode = "text/x-sh";
+    else if (ext === "sql") mode = "text/x-sql";
+    codeEditor.setOption("mode", mode);
+    codeEditor.refresh();  // Force refresh so new mode is applied
+  }
+
+  // --- Update Mode When Switching Files ---
+  function switchToFile(newIndex) {
+    if (currentFileIndex !== -1) {
+      uploadedFiles[currentFileIndex].content = codeEditor.getValue();
+    }
+    currentFileIndex = newIndex;
+    if (!openTabs.includes(newIndex)) openTabs.push(newIndex);
+    codeEditor.setValue(uploadedFiles[newIndex].content);
+    updateEditorMode(uploadedFiles[newIndex].name);
+    updateTabsUI();
+  }
+
   // --- Terminal Integration using xterm.js ---
-  const term = new Terminal();
+  const term = new Terminal({
+    wordWrap: true // Enable wrapping for long text
+  });
   term.open(document.getElementById('terminal'));
+
+  // Helper to normalize newlines
+  function normalizeNewlines(str) {
+    return str.replace(/\r?\n/g, "\r\n");
+  }
 
   // --- Custom Python Input Handling ---
   let waitingForPythonInput = false;
@@ -124,9 +148,16 @@ document.addEventListener('DOMContentLoaded', async function () {
   
   // Terminal input handling for shell and Python input modes
   let currentCommand = "";
+  function adjustTerminalScroll() {
+    term.scrollToBottom();
+  }
+
+  // Combined onData handler for xterm.js
   term.onData(e => {
+    term.write(e);
+    setTimeout(adjustTerminalScroll, 10);
     if (waitingForPythonInput) {
-      if (e === "\r") { // Enter key pressed
+      if (e === "\r") {
         term.write("\r\n");
         const line = pythonInputBuffer;
         pythonInputBuffer = "";
@@ -135,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           pythonInputResolver(line);
           pythonInputResolver = null;
         }
-      } else if (e === "\u007F") { // Backspace
+      } else if (e === "\u007F") {
         if (pythonInputBuffer.length > 0) {
           pythonInputBuffer = pythonInputBuffer.slice(0, -1);
           term.write("\b \b");
@@ -236,6 +267,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     currentFileIndex = newIndex;
     if (!openTabs.includes(newIndex)) openTabs.push(newIndex);
     codeEditor.setValue(uploadedFiles[newIndex].content);
+    updateEditorMode(uploadedFiles[newIndex].name);
     updateTabsUI();
   }
 
@@ -250,12 +282,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   // --- File Upload ---
-  uploadPlaceholder.addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", function(event) {
+  document.getElementById("uploadFile").addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", function (event) {
     const files = event.target.files;
     for (let file of files) {
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const fileContent = e.target.result;
         uploadedFiles.push({ name: file.name, content: fileContent });
         updateFileList();
@@ -268,7 +300,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   // --- New, Rename, and Delete File ---
   newFileBtn.addEventListener("click", () => {
-    showInlineInput("Enter new file name (with extension):", "", function(fileName) {
+    showInlineInput("Enter new file name (with extension):", "", function (fileName) {
       if (fileName.trim() === "") {
         showMessage("error", "File name cannot be empty.");
         return;
@@ -289,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       showMessage("error", "No file is open to rename.");
       return;
     }
-    showInlineInput("Enter new file name:", uploadedFiles[currentFileIndex].name, function(newName) {
+    showInlineInput("Enter new file name:", uploadedFiles[currentFileIndex].name, function (newName) {
       if (newName.trim() === "") {
         showMessage("error", "File name cannot be empty.");
         return;
@@ -310,12 +342,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       showMessage("error", "No file is open to delete.");
       return;
     }
-    // Delete immediately (no confirm popup)
     const deletedFileName = uploadedFiles[currentFileIndex].name;
     uploadedFiles.splice(currentFileIndex, 1);
     const tabIdx = openTabs.indexOf(currentFileIndex);
     if (tabIdx > -1) openTabs.splice(tabIdx, 1);
-    // Adjust indices in openTabs
     for (let i = 0; i < openTabs.length; i++) {
       if (openTabs[i] > currentFileIndex) openTabs[i]--;
     }
@@ -369,10 +399,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         };
         let result = eval(code);
         if (result !== undefined) outputBuffer += String(result) + "\n";
-        term.write("\r\n" + outputBuffer);
+        term.write("\r\n" + normalizeNewlines(outputBuffer));
         console.log = originalLog;
       } catch (err) {
-        term.write("\r\nError: " + err.message + "\r\n");
+        term.write("\r\nError: " + normalizeNewlines(err.message) + "\r\n");
       }
     } else if (ext === "html") {
       const previewWindow = window.open("", "_blank");
@@ -391,15 +421,20 @@ sys.stdout = StringIO()
         `, { stdin: pyInput });
         await window.pyodide.runPythonAsync(code, { stdin: pyInput });
         let output = await window.pyodide.runPythonAsync(`sys.stdout.getvalue()`);
-        term.write("\r\n" + output);
+        term.write("\r\n" + normalizeNewlines(output));
       } catch (err) {
-        term.write("\r\nPython Error: " + err.message + "\r\n");
+        term.write("\r\nPython Error: " + normalizeNewlines(err.message) + "\r\n");
       }
     } else if (ext === "css") {
       term.write("\r\nCSS files cannot be executed.\r\n");
     } else {
       term.write(`\r\nNo runner available for .${ext} files.\r\n`);
     }
+  }
+
+  // Helper: Normalize newlines to \r\n for consistent terminal formatting
+  function normalizeNewlines(str) {
+    return str.replace(/\r?\n/g, "\r\n");
   }
 });
 
@@ -413,13 +448,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const projectIdea = projectIdeaInput.value.trim();
     if (projectIdea) {
       landingPage.style.display = 'none';
-
       const response = await fetch('/openai_generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: projectIdea })
       });
-
       const data = await response.json();
       displayMessage(data.response, 'bot');
     }
@@ -445,23 +478,22 @@ let isResizing = false;
 let startY, startHeight;
 
 terminalResizeHandle.addEventListener("mousedown", (e) => {
-    isResizing = true;
-    startY = e.clientY;
-    startHeight = terminalContainer.offsetHeight;
-    document.body.style.userSelect = "none"; // Prevent text selection while resizing
+  isResizing = true;
+  startY = e.clientY;
+  startHeight = terminalContainer.offsetHeight;
+  document.body.style.userSelect = "none";
 });
 
 document.addEventListener("mousemove", (e) => {
-    if (!isResizing) return;
-    const newHeight = startHeight + (e.clientY - startY);
-    terminalContainer.style.height = `${Math.max(100, Math.min(newHeight, 500))}px`; // Min and max height limits
+  if (!isResizing) return;
+  const newHeight = startHeight + (e.clientY - startY);
+  terminalContainer.style.height = `${Math.max(100, Math.min(newHeight, 500))}px`;
 });
 
 document.addEventListener("mouseup", () => {
-    isResizing = false;
-    document.body.style.userSelect = "auto";
+  isResizing = false;
+  document.body.style.userSelect = "auto";
 });
-
 
 document.getElementById("hintButton").addEventListener("click", function () {
   addBotMessage("Here's a hint: Try breaking the problem into smaller parts.");
@@ -477,5 +509,5 @@ function addBotMessage(message) {
   messageElement.classList.add("bot-message");
   messageElement.textContent = message;
   chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to latest message
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 }

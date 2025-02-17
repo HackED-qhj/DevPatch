@@ -3,99 +3,46 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-html, body {
+  }
+  
+  html, body {
     height: 100%;
     background-color: #1F1F2E;
     color: #E0E0E0;
-}
-
-body {
+  }
+  
+  body {
     font-family: Arial, sans-serif;
-}
-
-/* --- Header & Buttons --- */
-.header {
+  }
+  
+  /* --- Header & Sidebar --- */
+  .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;
-    background-color: #2C2F3F;
+    height: 50px;
+    background-color: #1A1A27;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 15px;
     z-index: 1000;
-}
-
-.menu-btn {
-    font-size: 24px;
+  }
+  
+  .menu-btn {
+    font-size: 30px;
     background: none;
     border: none;
     color: #E0E0E0;
     cursor: pointer;
-}
-
-/* Updated Header Buttons - Run & Save */
-.header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.header-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    background-color: #2A2C40;
-    border: none;
-    color: #E0E0E0;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
-}
-
-.header-btn i {
-    font-size: 16px;
-}
-
-.header-btn:hover {
-    background-color: #343648;
-    transform: scale(1.05);
-}
-
-/* Run button specific styling */
-#runButton {
-    background-color: #00B894;
-    color: white;
-}
-
-#runButton:hover {
-    background-color: #019370;
-}
-
-/* Save button specific styling */
-#saveButton {
-    background-color: #2980B9;
-    color: white;
-}
-
-#saveButton:hover {
-    background-color: #1C6691;
-}
-
-/* --- File Sidebar --- */
-.sidebar {
+    transition: transform 0.2s;
+  }
+  
+  .menu-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .sidebar {
     position: fixed;
     top: 0;
     left: -250px;
@@ -108,14 +55,14 @@ body {
     overflow-y: auto;
     z-index: 2000;
     color: #f4f4f4;
-}
-
-.sidebar.open {
+  }
+  
+  .sidebar.open {
     left: 0;
-}
-
-.sidebar h2 {
-    font-family: "Times New Roman", Times, serif;
+  }
+  
+  .sidebar h2 {
+    font-family: "Times New Roman", serif;
     font-size: 18px;
     color: #E0E0E0;
     background-color: #2C2F3F;
@@ -123,43 +70,20 @@ body {
     border-bottom: 2px solid #3D3F51;
     text-align: center;
     letter-spacing: 1px;
-    font-weight: normal;
-}
-
-/* Upload Placeholder */
-#uploadPlaceholder {
-    font-family: "Times New Roman", Times, serif;
-    font-size: 14px;
-    color: #B0B0B0;
-    background-color: #292B3A;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #3D3F51;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: margin-top 0.3s ease-in-out;
-}
-
-#uploadPlaceholder:hover {
-    background-color: #343648;
-    border-color: #4B4E66;
-    color: #E0E0E0;
-    transform: scale(1.05);
-}
-
-/* Updated Dropdown to Expand Downwards */
-.file-actions {
+  }
+  
+  /* --- File Dropdown (with Upload File Button) --- */
+  .file-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 12px;
     padding: 8px;
-    position: relative;
     width: 100%;
-}
-
-.dropbtn {
+    position: relative;
+  }
+  
+  .dropbtn {
     background-color: #2A2C40;
     color: #E0E0E0;
     padding: 10px 14px;
@@ -171,184 +95,236 @@ body {
     align-items: center;
     gap: 8px;
     transition: background 0.2s ease-in-out;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
     width: 100%;
     justify-content: center;
-}
-
-.dropbtn:hover {
+  }
+  
+  .dropbtn:hover {
     background-color: #343648;
     transform: scale(1.05);
-}
-
-.dropbtn::after {
+  }
+  
+  .dropbtn::after {
     content: "▼";
     font-size: 10px;
     margin-left: 5px;
-}
-
-.dropdown-content {
+  }
+  
+  .dropdown-content {
     display: none;
     width: 100%;
     flex-direction: column;
     background-color: #2A2C40;
     border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.3);
     margin-top: 6px;
-}
-
-.dropdown-content button {
+  }
+  
+  .dropdown-content button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background: none;
     border: none;
     color: #E0E0E0;
     width: 100%;
     text-align: left;
     padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
     cursor: pointer;
     transition: background 0.2s;
-}
-
-.dropdown-content button:hover {
+  }
+  
+  .dropdown-content button:hover {
     background-color: #343648;
-}
-
-/* Makes the dropdown expand the layout instead of overlaying */
-.dropdown.active .dropdown-content {
+  }
+  
+  .dropdown.active .dropdown-content {
     display: flex;
-}
-
-/* File List Styling */
-.sidebar ul {
+  }
+  
+  /* --- File List --- */
+  .sidebar ul {
     list-style: none;
     padding: 0;
     margin-top: 8px;
-}
-
-.sidebar ul li {
+  }
+  
+  .sidebar ul li {
     display: flex;
     align-items: center;
     padding: 6px 10px;
     margin-bottom: 4px;
-    background: rgba(45, 45, 60, 0.8);
+    background: rgba(45,45,60,0.8);
     border-radius: 5px;
     font-size: 13px;
     color: #E0E0E0;
     cursor: pointer;
-    transition: background 0.2s ease-in-out, transform 0.1s ease-in-out;
+    transition: background 0.2s ease, transform 0.1s ease;
     border-left: 3px solid transparent;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.sidebar ul li:hover {
-    background: rgba(60, 60, 80, 0.9);
+  }
+  
+  .sidebar ul li:hover {
+    background: rgba(60,60,80,0.9);
     border-left: 3px solid #4B8AFF;
     transform: translateX(3px);
-}
-
-.sidebar ul li.active {
-    background: rgba(40, 40, 55, 0.9);
+  }
+  
+  .sidebar ul li.active {
+    background: rgba(40,40,55,0.9);
     border-left: 3px solid #29B6F6;
     font-weight: bold;
-}
-
-.close-btn {
+  }
+  
+  .close-btn {
     font-size: 24px;
     background: none;
     border: none;
     cursor: pointer;
     float: right;
     color: #E0E0E0;
-}
-
-/* --- Content Area --- */
-.content-area {
+  }
+  
+  /* --- Content Area --- */
+  .content-area {
     margin-top: 60px;
     display: flex;
     flex-direction: column;
     background-color: #1F1F2E;
     transition: margin-left 0.3s ease;
-}
-
-.content-area.sidebar-open {
+  }
+  
+  .content-area.sidebar-open {
     margin-left: 250px;
-}
-
-/* IDE Title */
-.ide-title {
-    font-family: "Times New Roman", Times, serif;
+  }
+  
+  /* --- IDE Header (DevPatch Title & Editor Buttons) --- */
+  .ide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #2C2F3F;
+    border-bottom: 1px solid #3D3F51;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .ide-title {
+    font-family: "Times New Roman", serif;
     font-size: 16px;
     color: #ccc;
-    margin: 10px 0 5px 0;
-    padding-left: 5px;
-}
+  }
 
-/* Tab Container */
-.tabs-container {
+ /* --- Tab Container --- */
+ .tabs-container {
     display: flex;
     align-items: center;
     border-bottom: 2px solid #3D3F51;
     background: #2A2C40;
     padding: 4px 8px;
     overflow-x: auto;
-}
-
-/* Individual Tab */
-.tab {
+  }
+  
+  .tab {
     position: relative;
-    padding: 6px 12px;
+    padding: 4px 12px;
     font-size: 13px;
     background: rgba(40, 40, 55, 0.8);
     color: #E0E0E0;
-    border-radius: 5px;
-    margin-right: 6px;
+    border-radius: 2px;
+    margin-right: 3px;
     cursor: pointer;
     transition: background 0.2s ease-in-out, transform 0.1s ease-in-out;
     display: flex;
     align-items: center;
     gap: 6px;
     border-bottom: 2px solid transparent;
-}
-
-/* Tab Hover Effect */
-.tab:hover {
+  }
+  
+  .tab:hover {
     background: rgba(50, 50, 70, 0.9);
     transform: scale(1.05);
-}
-
-/* Active Tab */
-.tab.active {
+  }
+  
+  .tab.active {
     background: rgba(35, 35, 50, 0.9);
     border-bottom: 2px solid #4B8AFF;
     font-weight: bold;
-}
-
-/* Close Tab Button */
-.tab .close-tab {
+  }
+  
+  .tab .close-tab {
     font-size: 12px;
     cursor: pointer;
     color: #888;
     transition: color 0.2s ease-in-out;
-}
-
-.tab .close-tab:hover {
+  }
+  
+  .tab .close-tab:hover {
     color: #FF5555;
-}
-
-/* Code Editor Styling */
-.main {
+  }
+  
+  
+  .editor-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .editor-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: normal;
+    background: linear-gradient(145deg, #232434, #1B1B29);
+    border: 1px solid #292B3A;
+    color: #E0E0E0;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .editor-btn i {
+    font-size: 14px;
+  }
+  
+  .editor-btn:hover {
+    background: linear-gradient(145deg, #2C2F3F, #252537);
+    transform: scale(1.03);
+  }
+  
+  #runButton {
+    background: linear-gradient(145deg, #007A5E, #005944);
+    border-color: #005944;
+  }
+  
+  #runButton:hover {
+    background: linear-gradient(145deg, #00916E, #007A5E);
+  }
+  
+  #saveButton {
+    background: linear-gradient(145deg, #264F78, #1A3B5D);
+    border-color: #1A3B5D;
+  }
+  
+  #saveButton:hover {
+    background: linear-gradient(145deg, #3069A2, #264F78);
+  }
+  
+  /* --- Main Editor --- */
+  .main {
     flex: 0 0 auto;
     padding: 0 20px 20px;
     background: #26293B;
     overflow: auto;
-}
-
-#editor {
+  }
+  
+  #editor {
     border: 1px solid #3D3F51;
     border-radius: 6px;
     height: 500px;
@@ -357,27 +333,26 @@ body {
     color: #E0E0E0;
     font-family: monospace;
     font-size: 14px;
-}
-
-/* Terminal Container */
-/* --- Terminal Container (Full-Width, Sleek, and Dark) --- */
-.terminal-container {
+  }
+  
+  /* --- Terminal --- */
+  .terminal-container {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 100%; /* Ensures full width to match coding area */
+    max-width: 100%;
     background: #1B1B29;
     border-top: 1px solid #292B3A;
-    box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0px 0px 8px rgba(0,0,0,0.2);
     overflow: hidden;
-    min-height: 100px; /* Smaller default height */
-    max-height: 500px;
+    height: 120px; /* Smaller initial height */
+    min-height: 100px;
+    max-height: 300px;
     transition: height 0.2s ease-in-out;
     position: relative;
-}
-
-/* --- Terminal Header (Title Bar) --- */
-.terminal-header {
+  }
+  
+  .terminal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -387,24 +362,22 @@ body {
     font-size: 13px;
     font-weight: bold;
     border-bottom: 1px solid #292B3A;
-    box-shadow: inset 0px -2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px -2px 4px rgba(0,0,0,0.1);
     user-select: none;
-}
-
-/* --- Terminal Title (With Icon for a Modern Look) --- */
-.terminal-title {
+  }
+  
+  .terminal-title {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.terminal-title i {
+  }
+  
+  .terminal-title i {
     font-size: 14px;
     color: #4B8AFF;
-}
-
-/* --- Terminal Content Area --- */
-#terminal {
+  }
+  
+  #terminal {
     background: #1B1B29;
     color: #E0E0E0;
     font-family: monospace;
@@ -413,10 +386,11 @@ body {
     overflow-y: auto;
     flex-grow: 1;
     border-top: 1px solid #292B3A;
-}
-
-/* --- Resize Handle (For Bottom Adjustment) --- */
-.terminal-resize-handle {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  .terminal-resize-handle {
     width: 100%;
     height: 10px;
     background: #292B3A;
@@ -426,21 +400,20 @@ body {
     cursor: ns-resize;
     user-select: none;
     border-top: 1px solid #3D3F51;
-}
-
-.terminal-resize-handle i {
+  }
+  
+  .terminal-resize-handle i {
     font-size: 12px;
     color: #777;
     transition: color 0.2s ease-in-out;
-}
-
-.terminal-resize-handle:hover i {
+  }
+  
+  .terminal-resize-handle:hover i {
     color: #4B8AFF;
-}
-
-
-/* --- Bot Container --- */
-.bot-container {
+  }
+  
+  /* --- Bot Container --- */
+  .bot-container {
     width: 100%;
     background-color: #1B1B29;
     padding: 15px;
@@ -448,10 +421,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-/* --- Chat Messages Area --- */
-.chat-messages {
+  }
+  
+  .chat-messages {
     background: #252537;
     border: 1px solid #3D3F51;
     padding: 8px;
@@ -459,14 +431,13 @@ body {
     overflow-y: auto;
     border-radius: 10px;
     color: #E0E0E0;
-    box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0px 0px 6px rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     gap: 6px;
-}
-
-/* --- iMessage-Style Bot Message --- */
-.bot-message {
+  }
+  
+  .bot-message {
     background: linear-gradient(145deg, #333645, #2A2C3C);
     color: #E0E0E0;
     padding: 6px 10px;
@@ -475,12 +446,11 @@ body {
     border-radius: 16px;
     border-top-left-radius: 4px;
     align-self: flex-start;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
     word-wrap: break-word;
-}
-
-/* --- iMessage-Style User Message (If Needed in the Future) --- */
-.user-message {
+  }
+  
+  .user-message {
     background: linear-gradient(145deg, #4B8AFF, #377DFF);
     color: #FFF;
     padding: 6px 10px;
@@ -489,47 +459,47 @@ body {
     border-radius: 16px;
     border-top-right-radius: 4px;
     align-self: flex-end;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* --- Ultra-Sleek Bot Action Buttons --- */
-.bot-actions {
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+  }
+  
+  /* --- Bot Action Buttons --- */
+  .bot-actions {
     display: flex;
     justify-content: center;
     gap: 10px;
-}
-
-.bot-button {
+  }
+  
+  .bot-button {
     flex: 1;
     padding: 10px;
     font-size: 13px;
     font-weight: bold;
-    background: rgba(40, 40, 55, 0.8);
+    background: rgba(40,40,55,0.8);
     border: 1px solid #3D3F51;
     color: #E0E0E0;
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     text-align: center;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
     letter-spacing: 0.5px;
-}
-
-.bot-button:hover {
-    background: rgba(60, 60, 80, 0.9);
+  }
+  
+  .bot-button:hover {
+    background: rgba(60,60,80,0.9);
     transform: scale(1.03);
-}
-
-.bot-button:active {
+  }
+  
+  .bot-button:active {
     transform: scale(0.97);
-}
-
-.chat-input {
+  }
+  
+  .chat-input {
     display: flex;
     gap: 10px;
-}
-
-.chat-input textarea {
+  }
+  
+  .chat-input textarea {
     flex: 1;
     padding: 10px;
     border: 1px solid #444;
@@ -537,9 +507,9 @@ body {
     resize: none;
     background-color: #1F1F2E;
     color: #E0E0E0;
-}
-
-.chat-input button {
+  }
+  
+  .chat-input button {
     padding: 10px 15px;
     background-color: #292B3A;
     border: 1px solid #3D3F51;
@@ -547,54 +517,64 @@ body {
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-}
-
-.chat-input button:hover {
+  }
+  
+  .chat-input button:hover {
     background-color: #343648;
     border-color: #4B4E66;
     transform: scale(1.05);
-}
-
-/* Landing Page */
-.landing-page {
+  }
+  
+  /* --- Fullscreen Landing Page Overlay --- */
+  .landing-page {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(15, 15, 15, 0.95);
+    height: 100vh;
+    background-color: rgba(15,15,15,0.85);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-}
-
-.landing-content {
+  }
+  
+  /* --- Centered Popup Content --- */
+  .landing-content {
     background: #2C2F3F;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     text-align: center;
     width: 400px;
-}
-
-.landing-content h2 {
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 10000;
+  }
+  
+  .landing-content h2 {
     color: #E0E0E0;
     font-family: "Times New Roman", serif;
-}
-
-.landing-content p {
+  }
+  
+  .landing-content p {
     color: #B0B0B0;
-}
-
-.landing-content textarea {
+    font-size: small;
+    padding: 5px;
+  }
+  
+  .landing-content textarea {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
     background: #1F1F2E;
     border: 1px solid #3D3F51;
     color: white;
-}
-
-.landing-content button {
-    margin-top: 10px;
+    font-size: small;
+    font-family: "Times New Roman", serif;
+  }
+  
+  .landing-content button {
+    margin-top: 2px;
     padding: 10px 20px;
     background-color: #292B3A;
     border: none;
@@ -602,24 +582,24 @@ body {
     cursor: pointer;
     border-radius: 5px;
     transition: all 0.2s ease-in-out;
-}
-
-.landing-content button:hover {
+  }
+  
+  .landing-content button:hover {
     background-color: #343648;
     transform: scale(1.05);
-}
-
-/* Chat Messages */
-.chat-messages {
+  }
+  
+  /* --- Chat Messages --- */
+  .chat-messages {
     background: #26293B;
     border: 1px solid #444;
     padding: 10px;
     height: 200px;
     overflow-y: auto;
     border-radius: 4px;
-}
-
-.bot-message {
+  }
+  
+  .bot-message {
     background: #444;
     color: white;
     padding: 10px;
@@ -627,9 +607,9 @@ body {
     margin: 5px 0;
     max-width: 75%;
     align-self: flex-start;
-}
-
-.user-message {
+  }
+  
+  .user-message {
     background: #007AFF;
     color: white;
     padding: 10px;
@@ -637,9 +617,10 @@ body {
     margin: 5px 0;
     max-width: 75%;
     align-self: flex-end;
-}
-/* --- Modern Dark Message Bar --- */
-.message-bar {
+  }
+  
+  /* --- Modern Dark Message Bar --- */
+  .message-bar {
     position: fixed;
     top: 60px;
     left: 50%;
@@ -653,51 +634,49 @@ body {
     border-radius: 8px;
     background: linear-gradient(145deg, #1a1a2e, #222242);
     color: #E0E0E0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     opacity: 0;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     transform: translate(-50%, -10px);
     z-index: 1000;
-}
-
-.message-bar.hidden {
+  }
+  
+  .message-bar.hidden {
     display: none;
-}
-
-/* Message Types */
-.message-bar.success {
+  }
+  
+  .message-bar.success {
     background: linear-gradient(145deg, #2e7d32, #1b5e20);
     color: #dff0d8;
-}
-
-.message-bar.error {
+  }
+  
+  .message-bar.error {
     background: linear-gradient(145deg, #c62828, #8e0000);
     color: #ffdddd;
-}
-
-.message-bar.warning {
+  }
+  
+  .message-bar.warning {
     background: linear-gradient(145deg, #ff9800, #e65100);
     color: #fff3cd;
-}
-
-/* --- Sleek & Compact Inline Input Bar --- */
-.inline-input-container {
+  }
+  
+  /* --- Sleek & Compact Inline Input Bar --- */
+  .inline-input-container {
     display: flex;
     align-items: center;
     gap: 5px;
     padding: 6px;
     margin-bottom: 8px;
-    width: 90%; /* Ensures it fits neatly in the sidebar */
-    max-width: 220px; /* Controls max size for balance */
-    background: rgba(40, 40, 50, 0.9);
+    width: 90%;
+    max-width: 220px;
+    background: rgba(40,40,50,0.9);
     border: 1px solid #3D3F51;
     border-radius: 6px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
     transition: all 0.2s ease-in-out;
-}
-
-/* Input Field */
-.inline-input-container input {
+  }
+  
+  .inline-input-container input {
     flex: 1;
     padding: 4px 6px;
     font-size: 13px;
@@ -710,29 +689,26 @@ body {
     white-space: nowrap;
     text-overflow: ellipsis;
     transition: border 0.2s ease-in-out;
-}
-
-/* When typing, make sure it scrolls */
-.inline-input-container input:focus {
+  }
+  
+  .inline-input-container input:focus {
     outline: none;
     border-color: #4B4E66;
-    box-shadow: 0px 0px 4px rgba(75, 78, 102, 0.8);
+    box-shadow: 0px 0px 4px rgba(75,78,102,0.8);
     overflow-x: auto;
     white-space: nowrap;
-}
-
-/* Input field ensures long text scrolls */
-.inline-input-container input::-webkit-scrollbar {
+  }
+  
+  .inline-input-container input::-webkit-scrollbar {
     height: 3px;
-}
-
-.inline-input-container input::-webkit-scrollbar-thumb {
+  }
+  
+  .inline-input-container input::-webkit-scrollbar-thumb {
     background: #444;
     border-radius: 2px;
-}
-
-/* Buttons */
-.inline-input-container button {
+  }
+  
+  .inline-input-container button {
     padding: 4px 8px;
     font-size: 12px;
     background-color: #343648;
@@ -741,9 +717,10 @@ body {
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
-}
-
-.inline-input-container button:hover {
+  }
+  
+  .inline-input-container button:hover {
     background-color: #4B4E66;
     transform: scale(1.05);
-}
+  }
+  
