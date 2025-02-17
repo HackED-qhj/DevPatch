@@ -52,14 +52,20 @@ There are countless opportunities to scale DevPatch, and with enough time, this 
 # 💻 Getting Started
 
 **Clone the repository**
-'git clone https://github.com/HackED-qhj/DevPatch.git
-cd DevPatch'
+'''bash
+git clone https://github.com/HackED-qhj/DevPatch.git
+cd DevPatch
+'''
 
 **Install dependencies**
-'pip install -r requirements.txt'
+'''bash
+pip install -r requirements.txt
+'''
 
 **Run the application**
-'python3 main.py'
+'''bash
+python3 main.py
+'''
 run the html file in your browser
 
 **Start coding with DevPatch!**
