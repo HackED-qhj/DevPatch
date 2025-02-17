@@ -1,3 +1,4 @@
+// ================== File, Editor, Terminal, and File Management Code ==================
 document.addEventListener('DOMContentLoaded', async function () {
   // --- Message Bar Function ---
   function showMessage(type, message, duration = 3000) {
@@ -357,7 +358,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
 
   // --- Save File ---
-  saveButton.addEventListener("click", () => {
+  document.getElementById("saveButton").addEventListener("click", () => {
     if (currentFileIndex === -1) {
       showMessage("error", "No file open to save.");
       return;
@@ -375,7 +376,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
 
   // --- Run File ---
-  runButton.addEventListener("click", async () => {
+  document.getElementById("runButton").addEventListener("click", async () => {
     if (currentFileIndex === -1) {
       showMessage("error", "No file open to run.");
       return;
@@ -437,77 +438,174 @@ sys.stdout = StringIO()
     return str.replace(/\r?\n/g, "\r\n");
   }
 });
-
+  
+// ================== Chat Bot Hardcoded Conversation & Dropdown Toggle ==================
 document.addEventListener('DOMContentLoaded', function () {
   const landingPage = document.getElementById('landingPage');
   const startProjectBtn = document.getElementById('startProject');
   const projectIdeaInput = document.getElementById('projectIdea');
   const chatMessages = document.getElementById('chatMessages');
+  const hintButton = document.getElementById("hintButton");
+  const exampleButton = document.getElementById("exampleButton");
 
-  startProjectBtn.addEventListener('click', async function () {
-    const projectIdea = projectIdeaInput.value.trim();
-    if (projectIdea) {
-      landingPage.style.display = 'none';
-      const response = await fetch('/openai_generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: projectIdea })
-      });
-      const data = await response.json();
-      displayMessage(data.response, 'bot');
+  // --- Typing Effect for Bot Messages ---
+  function typeMessage(element, text, index = 0, speed = 30) {
+    if (index < text.length) {
+      element.textContent += text[index];
+      setTimeout(() => typeMessage(element, text, index + 1, speed), speed);
+    } else {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-  });
+  }
 
+  // --- Display Message Function ---
   function displayMessage(text, sender) {
     const message = document.createElement('div');
     message.classList.add(sender === 'bot' ? 'bot-message' : 'user-message');
-    message.textContent = text;
-    chatMessages.appendChild(message);
+    
+    if (sender === 'user') {
+      message.classList.add('bounce-in');
+      message.textContent = text;
+      chatMessages.appendChild(message);
+    } else {
+      chatMessages.appendChild(message);
+      typeMessage(message, text);
+    }
   }
+
+  // --- Hardcoded Chat Conversation Sequence ---
+  let hintPromiseResolve = null;
+  let examplePromiseResolve = null;
+  let secondHintPromiseResolve = null;
+
+  // When hint button is clicked, resolve any waiting promise.
+  hintButton.addEventListener("click", function () {
+    displayMessage("Hint, please!", "user");
+    if (hintPromiseResolve) {
+      displayMessage("When loading a file, make sure you use the correct file path.", "bot");
+      hintPromiseResolve();
+      hintPromiseResolve = null;
+    } else if (secondHintPromiseResolve) {
+      displayMessage("Make sure you converted your number strings to integers!", "bot");
+      secondHintPromiseResolve();
+      secondHintPromiseResolve = null;
+    }
+  });
+
+  // When example button is clicked, resolve waiting promise.
+  exampleButton.addEventListener("click", function () {
+    displayMessage("Give me an example.", "user");
+    if (examplePromiseResolve) {
+      displayMessage(
+        "This is a short example on how storing the variables will look:\n" +
+        "line = file.readline().strip()  # Read the first line and remove whitespace\n" +
+        "parts = line.split()  # Split by spaces\n" +
+        "num1, num2, operation = parts[0], parts[1], parts[2]",
+        "bot"
+      );
+      examplePromiseResolve();
+      examplePromiseResolve = null;
+    }
+  });
+
+  // Dropdown Toggle for File Options
+  const dropbtn = document.querySelector(".dropbtn");
+  dropbtn.addEventListener("click", function () {
+    const dropdown = document.querySelector(".dropdown");
+    dropdown.classList.toggle("active");
+  });
+
+  // Terminal Resizing (if not already added)
+  const terminalContainer = document.getElementById("terminalContainer");
+  const terminalResizeHandle = document.getElementById("terminalResizeHandle");
+  let isResizing = false;
+  let startY, startHeight;
+
+  terminalResizeHandle.addEventListener("mousedown", (e) => {
+    isResizing = true;
+    startY = e.clientY;
+    startHeight = terminalContainer.offsetHeight;
+    document.body.style.userSelect = "none";
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isResizing) return;
+    const newHeight = startHeight + (e.clientY - startY);
+    terminalContainer.style.height = `${Math.max(100, Math.min(newHeight, 500))}px`;
+  });
+
+  document.addEventListener("mouseup", () => {
+    isResizing = false;
+    document.body.style.userSelect = "auto";
+  });
+
+  // ---------------- Hardcoded Conversation Sequence ----------------
+  async function runSequence() {
+    // Hardcoded project idea (ignoring input field)
+    const projectIdea = "A simple calculator program that reads num1 and num2 and the operation from another open file, in Python.";
+    displayMessage(projectIdea, "user");
+    landingPage.style.display = 'none';
+
+    // Step 0:
+    displayMessage("Hmmm, we should first create a file that will hold all of our code!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 15000)); // wait 10 sec
+
+    // Step 1:
+    displayMessage("Wait! Make sure to upload your file containing your numbers!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 10000)); // wait 10 sec
+
+    // Step 2:
+    displayMessage("Great!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec
+
+    // Step 3:
+    displayMessage("If you're stuck, try writing a function that opens the file holding our numbers!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 30000)); // wait 15 sec
+
+    // Step 4:
+    displayMessage("Whoops! Looks like there was a small error, can you spot it?", "bot");
+    // Wait until user clicks hint button.
+    await new Promise(resolve => { hintPromiseResolve = resolve; });
+
+    // Step 5:
+    await new Promise(resolve => setTimeout(resolve, 10000)); // wait 10 sec
+    displayMessage("AMAZING!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 3000)); // wait 3 sec
+
+    // Step 6:
+    displayMessage("Now that we've loaded the file, we should find a way to stores the numbers in their own variables! Then we can easily make the calculation.", "bot");
+    await new Promise(resolve => setTimeout(resolve, 30000)); // wait 10 sec
+
+    // Step 7: Wait for user to click example button.
+    await new Promise(resolve => { examplePromiseResolve = resolve; });
+
+    // Step 8:
+    await new Promise(resolve => setTimeout(resolve, 10000)); // wait 20 sec
+    displayMessage("You're doing amazing. Keep it up.", "bot");
+    await new Promise(resolve => setTimeout(resolve, 5000)); // wait 5 sec
+
+    // Step 9:
+    displayMessage("If we have our variables, and we want to return the outcome, how can we do this?", "bot");
+    await new Promise(resolve => setTimeout(resolve, 10000)); // wait 10 sec
+
+    // Step 10:
+    displayMessage("Try a simple if/elif block, and some arithmetic!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 10000)); // wait 10 sec
+
+    // Step 11: Wait for second hint button press.
+    await new Promise(resolve => { secondHintPromiseResolve = resolve; });
+
+    displayMessage("You're close, now call your function in a print statement to run it!", "bot");
+    await new Promise(resolve => setTimeout(resolve, 5000)); // wait 5 sec
+
+    // Step 12:
+    await new Promise(resolve => setTimeout(resolve, 15000)); // wait 15 sec
+    displayMessage("AWESOME! You finished the project, great job!", "bot");
+  }
+
+  // Start the hardcoded conversation when Start Project is clicked.
+  startProjectBtn.addEventListener('click', function () {
+    // Ignore textarea input and run the hardcoded sequence.
+    runSequence();
+  });
 });
-
-document.querySelector(".dropbtn").addEventListener("click", function () {
-  const dropdown = document.querySelector(".dropdown");
-  dropdown.classList.toggle("active");
-});
-
-const terminalContainer = document.getElementById("terminalContainer");
-const terminalResizeHandle = document.getElementById("terminalResizeHandle");
-
-let isResizing = false;
-let startY, startHeight;
-
-terminalResizeHandle.addEventListener("mousedown", (e) => {
-  isResizing = true;
-  startY = e.clientY;
-  startHeight = terminalContainer.offsetHeight;
-  document.body.style.userSelect = "none";
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (!isResizing) return;
-  const newHeight = startHeight + (e.clientY - startY);
-  terminalContainer.style.height = `${Math.max(100, Math.min(newHeight, 500))}px`;
-});
-
-document.addEventListener("mouseup", () => {
-  isResizing = false;
-  document.body.style.userSelect = "auto";
-});
-
-document.getElementById("hintButton").addEventListener("click", function () {
-  addBotMessage("Here's a hint: Try breaking the problem into smaller parts.");
-});
-
-document.getElementById("exampleButton").addEventListener("click", function () {
-  addBotMessage("Example: If you're working with loops, try using a 'for' loop to iterate over a list.");
-});
-
-function addBotMessage(message) {
-  const chatMessages = document.getElementById("chatMessages");
-  const messageElement = document.createElement("div");
-  messageElement.classList.add("bot-message");
-  messageElement.textContent = message;
-  chatMessages.appendChild(messageElement);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}

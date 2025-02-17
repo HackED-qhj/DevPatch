@@ -215,8 +215,10 @@
   
   .ide-title {
     font-family: "Times New Roman", serif;
-    font-size: 16px;
+    font-size: 18px;
     color: #ccc;
+    margin-left: 10px;
+    margin-top: 15px;
   }
 
  /* --- Tab Container --- */
@@ -450,6 +452,12 @@
     word-wrap: break-word;
   }
   
+  @keyframes bounce-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
   .user-message {
     background: linear-gradient(145deg, #4B8AFF, #377DFF);
     color: #FFF;
@@ -460,6 +468,7 @@
     border-top-right-radius: 4px;
     align-self: flex-end;
     box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+    animation: bounce-in 0.3s ease-out;
   }
   
   /* --- Bot Action Buttons --- */
